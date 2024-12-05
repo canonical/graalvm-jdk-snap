@@ -1,0 +1,168 @@
+name: graalvm-jdk
+base: core24
+version: '21.0.5'
+summary: GraalVM for the Java Development Kit v23
+description: |
+  GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
+  Native image compilation solves Java's slow startup problem.
+
+  This snap brings in the latest GraalVM features, as well as access to the Java 23
+  features, in one JDK. It empowers developers to build faster, smaller and leaner
+  applications that are typically ideal for cloud-native deployment.
+
+grade: devel
+confinement: devmode
+
+platforms:
+  amd64:
+
+package-repositories:
+  - type: apt
+    ppa: pushkarnk/graalvm-packages
+    priority: always
+
+lint:
+  ignore:
+  - library:
+    - graalvm-ce/lib/*.so
+    - usr/lib/x86_64-linux-gnu/*.so*
+
+parts:
+  mx:
+    plugin: nil
+    source: https://github.com/graalvm/mx
+    source-tag: 6.46.1
+    source-type: git
+    override-stage: |
+      cp -R $CRAFT_PART_BUILD $CRAFT_PART_INSTALL/mx
+      craftctl default
+
+  graalvm:
+    after: [mx]
+    plugin: nil
+    source: https://github.com/graalvm/graalvm-community-jdk21u/archive/refs/tags/jdk-21.0.5.tar.gz 
+    source-type: tar 
+    build-packages:
+    - gcc
+    - make
+    - cmake
+    - openjdk-21-jvmci-jre-headless
+    override-build: |
+      rm -r $CRAFT_PART_SRC
+      cd $CRAFT_PART_BUILD/vm
+      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-21-openjdk-amd64-jvmci --env ce build
+      craftctl default
+    stage-packages:
+    - build-essential
+    - zlib1g-dev
+    - libasound2t64
+    - libx11-6
+    - libxext6
+    - libxi6
+    - libxrender1
+    - libharfbuzz0b
+    - libjpeg8
+    - libxtst6
+    - liblcms2-2
+    - libgif7
+    - libxau6
+    - libxdmcp6
+    - libxcb1
+    override-stage: |
+      mv $CRAFT_PART_BUILD/sdk/latest_graalvm/graalvm-community-openjdk* $CRAFT_PART_INSTALL/graalvm-ce
+      craftctl default
+
+apps:
+  java:
+    command: graalvm-ce/bin/java
+
+  javac:
+    command: graalvm-ce/bin/javac
+
+  native-image:
+    command: graalvm-ce/bin/native-image
+
+  native-image-configure:
+    command: graalvm-ce/bin/native-image-configure
+
+  jar:
+    command: graalvm-ce/bin/jar
+
+  jcmd:
+    command: graalvm-ce/bin/jcmd
+
+  jdeprscan:
+    command: graalvm-ce/bin/jdeprscan
+
+  jhsdb:
+    command: graalvm-ce/bin/jhsdb
+
+  jlink:
+    command: graalvm-ce/bin/jlink
+
+  jpackage:
+    command: graalvm-ce/bin/jpackage
+
+  jshell:
+    command: graalvm-ce/bin/jshell
+
+  jstatd:
+    command: graalvm-ce/bin/jstatd
+
+  serialver:
+    command: graalvm-ce/bin/serialver
+
+  jarsigner:
+    command: graalvm-ce/bin/jarsigner
+
+  javadoc:
+    command: graalvm-ce/bin/javadoc
+
+  jconsole:
+    command: graalvm-ce/bin/jconsole
+
+  jdeps:
+    command: graalvm-ce/bin/jdeps
+
+  jimage:
+    command: graalvm-ce/bin/jimage
+
+  jmap:
+    command: graalvm-ce/bin/jmap
+
+  jps:
+    command: graalvm-ce/bin/jps
+
+  jstack:
+    command: graalvm-ce/bin/jstack
+
+  jwebserver:
+    command: graalvm-ce/bin/jwebserver
+
+  javap:
+    command: graalvm-ce/bin/javap
+
+  jdb:
+    command: graalvm-ce/bin/jdb
+
+  jfr:
+    command: graalvm-ce/bin/jfr
+
+  jinfo:
+    command: graalvm-ce/bin/jinfo
+
+  jmod:
+    command: graalvm-ce/bin/jmod
+
+  jrunscript:
+    command: graalvm-ce/bin/jrunscript
+
+  jstat:
+    command: graalvm-ce/bin/jstat
+
+  keytool:
+    command: graalvm-ce/bin/keytool
+
+  rmiregistry:
+    command: graalvm-ce/bin/rmiregistry
+
