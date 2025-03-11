@@ -27,6 +27,9 @@ lint:
     - graalvm-ce/lib/*.so
     - usr/lib/x86_64-linux-gnu/*.so*
 
+plugs:
+  home: nil
+
 parts:
   mx:
     plugin: nil
@@ -75,6 +78,15 @@ parts:
 apps:
   java:
     command: graalvm-ce/bin/java
+    # This list of plugs is borrowed from https://github.com/jgneff/openjdk/blob/edge/snap/snapcraft.yaml
+    plugs:
+    - network
+    - network-bind
+    - desktop
+    - desktop-legacy
+    - gsettings
+    - opengl
+    - x11
 
   javac:
     command: graalvm-ce/bin/javac
