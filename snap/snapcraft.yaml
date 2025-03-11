@@ -10,8 +10,8 @@ description: |
   features, in one JDK. It empowers developers to build faster, smaller and leaner
   applications that are typically ideal for cloud-native deployment.
 
-grade: devel
-confinement: devmode
+grade: stable
+confinement: strict
 
 platforms:
   amd64:
@@ -26,6 +26,9 @@ lint:
   - library:
     - graalvm-ce/lib/*.so
     - usr/lib/x86_64-linux-gnu/*.so*
+
+plugs:
+  home: nil
 
 parts:
   mx:
@@ -75,6 +78,15 @@ parts:
 apps:
   java:
     command: graalvm-ce/bin/java
+    # This list of plugs is borrowed from https://github.com/jgneff/openjdk/blob/edge/snap/snapcraft.yaml
+    plugs:
+    - network
+    - network-bind
+    - desktop
+    - desktop-legacy
+    - gsettings
+    - opengl
+    - x11
 
   javac:
     command: graalvm-ce/bin/javac
