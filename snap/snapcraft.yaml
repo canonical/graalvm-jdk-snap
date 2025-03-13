@@ -1,6 +1,6 @@
 name: graalvm-jdk
 base: core24
-version: '21.0.6.2'
+version: '21.0.6.3'
 summary: GraalVM for the Java Development Kit v21
 description: |
   GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
