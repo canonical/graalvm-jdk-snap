@@ -1,6 +1,6 @@
 name: graalvm-jdk
 base: core24
-version: '24ea'
+version: '24ea+29.1'
 summary: GraalVM for the Java Development Kit v24
 description: |
   GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
@@ -28,7 +28,7 @@ lint:
     - usr/lib/x86_64-linux-gnu/*.so*
 
 plugs:
-  home: nil
+  home:
 
 parts:
   mx:
