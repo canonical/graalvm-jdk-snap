@@ -28,7 +28,7 @@ lint:
     - usr/lib/x86_64-linux-gnu/*.so*
 
 plugs:
-  home: nil
+  home:
 
 parts:
   mx:
