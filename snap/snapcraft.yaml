@@ -1,12 +1,12 @@
 name: graalvm-jdk
 base: core24
-version: '24ea+29.1'
-summary: GraalVM for the Java Development Kit v24
+version: '25+17ea'
+summary: GraalVM for the Java Development Kit v25
 description: |
   GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
   Native image compilation solves Java's slow startup problem.
 
-  This snap brings in the latest GraalVM features, as well as access to the Java 24
+  This snap brings in the latest GraalVM features, as well as access to the Java 25
   features, in one JDK. It empowers developers to build faster, smaller and leaner
   applications that are typically ideal for cloud-native deployment.
 
@@ -34,7 +34,7 @@ parts:
   mx:
     plugin: nil
     source: https://github.com/graalvm/mx
-    source-tag: 7.35.2
+    source-tag: 7.40.2
     source-type: git
     override-stage: |
       cp -R $CRAFT_PART_BUILD $CRAFT_PART_INSTALL/mx
@@ -43,17 +43,17 @@ parts:
   graalvm:
     after: [mx]
     plugin: nil
-    source: https://github.com/oracle/graal/archive/refs/tags/jdk-24+29.tar.gz
+    source: https://github.com/oracle/graal/archive/refs/tags/jdk-25+17.tar.gz
     source-type: tar
     build-packages:
     - gcc
     - make
     - cmake
-    - openjdk-24-jvmci-jdk
+    - openjdk-25-jvmci-jdk
     override-build: |
       rm -r $CRAFT_PART_SRC
       cd $CRAFT_PART_BUILD/vm
-      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-24-openjdk-amd64-jvmci --env ce build
+      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-25-openjdk-amd64-jvmci --env ce build
       craftctl default
     stage-packages:
     - build-essential
