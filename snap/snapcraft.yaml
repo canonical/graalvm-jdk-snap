@@ -15,6 +15,7 @@ confinement: strict
 
 platforms:
   amd64:
+  arm64:
 
 package-repositories:
   - type: apt
@@ -25,7 +26,7 @@ lint:
   ignore:
   - library:
     - graalvm-ce/lib/*.so
-    - usr/lib/x86_64-linux-gnu/*.so*
+    - usr/lib/*-linux-gnu/*.so*
 
 plugs:
   home:
@@ -44,7 +45,7 @@ parts:
     after: [mx]
     plugin: nil
     source: https://github.com/graalvm/graalvm-community-jdk21u/archive/refs/tags/jdk-21.0.8.tar.gz
-    source-type: tar 
+    source-type: tar
     build-packages:
     - gcc
     - make
@@ -53,7 +54,7 @@ parts:
     override-build: |
       rm -r $CRAFT_PART_SRC
       cd $CRAFT_PART_BUILD/vm
-      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-21-openjdk-amd64-jvmci --env ce build
+      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-21-openjdk-${CRAFT_ARCH_BUILD_FOR}-jvmci --env ce build
       craftctl default
     stage-packages:
     - build-essential
@@ -177,4 +178,3 @@ apps:
 
   rmiregistry:
     command: graalvm-ce/bin/rmiregistry
-
