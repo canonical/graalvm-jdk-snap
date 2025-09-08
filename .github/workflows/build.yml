@@ -1,0 +1,87 @@
+name: Build and publish snap
+
+on:
+  push:
+    branches:
+      - development
+      - graalvm-jdk-21
+      - graalvm-jdk-24
+  pull_request:
+    branches:
+      - development
+      - graalvm-jdk-21
+      - graalvm-jdk-24
+  workflow_dispatch:
+
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+
+  snapcraft-build:
+    strategy:
+      matrix:
+        arch: [arm64, amd64]
+    runs-on: self-hosted-linux-${{ matrix.arch }}-noble-large
+    steps:
+      - uses: actions/checkout@v5
+        id: checkout
+
+      - name: Build snap
+        id: build-snap
+        uses: snapcore/action-build@v1
+        with:
+          path: .
+
+      - name: Upload Snap to workflow artifacts
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.ref_name }}-${{ matrix.arch }}
+          path: ${{ steps.build-snap.outputs.snap }}
+
+
+  snapcraft-publish:
+    runs-on: ubuntu-latest
+    if: ${{ (contains(fromJSON('["push"]'), github.event_name) || contains(fromJSON('["workflow_dispatch"]'), github.event_name)  }} 
+    needs: snapcraft-build
+    strategy:
+      matrix:
+        artifact-name:
+          - ${{ github.ref_name }}
+        arch:
+          - arm64
+          - amd64
+    steps:
+      - uses: actions/download-artifact@v5
+        id: download-artifact
+        with:
+          name: ${{ matrix.artifact-name }}-${{ matrix.arch }}
+
+      - name: Gather filename
+        id: gather-filename-devpack
+        env:
+          ARTIFACT_PATH: ${{ steps.download-artifact.outputs.download-path }}
+        run: |
+          set -ex
+          ls -la $ARTIFACT_PATH
+          SNAP_FILE_NAME=$(ls ${ARTIFACT_PATH}/${{ github.ref_name }}*.snap)
+          echo "SNAP_PATH=${SNAP_FILE_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Set release channel
+        run: |
+            if [[ "$GITHUB_REF_NAME" == "development" ]]; then
+              echo "CHANNEL=edge" >> $GITHUB_ENV
+            elif [[ "$GITHUB_REF_NAME" == "graalvm-jdk-24" ]]; then
+              echo "CHANNEL=stable" >> $GITHUB_ENV
+            else
+              echo "CHANNEL=v21" >> $GITHUB_ENV
+            fi
+
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPSTORE_LOGIN }}
+        with:
+          snap: ${{ steps.gather-filename-devpack.outputs.SNAP_PATH }}
+          release:  ${{ env.CHANNEL }}
