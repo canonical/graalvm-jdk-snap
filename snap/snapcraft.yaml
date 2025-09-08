@@ -6,7 +6,7 @@ description: |
   GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
   Native image compilation solves Java's slow startup problem.
 
-  This snap brings in the latest GraalVM features, as well as access to the Java 23
+  This snap brings in the latest GraalVM features, as well as access to the Java 21
   features, in one JDK. It empowers developers to build faster, smaller and leaner
   applications that are typically ideal for cloud-native deployment.
 
