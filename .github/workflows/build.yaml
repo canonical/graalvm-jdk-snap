@@ -1,4 +1,4 @@
-name: Build on main
+name: Build and publish snap
 
 on:
   push:
@@ -71,10 +71,12 @@ jobs:
 
       - name: Set release channel
         run: |
-            if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            if [[ "$GITHUB_REF_NAME" == "development" ]]; then
+              echo "CHANNEL=edge" >> $GITHUB_ENV
+            elif [[ "$GITHUB_REF_NAME" == "graalvm-jdk-24" ]]; then
               echo "CHANNEL=stable" >> $GITHUB_ENV
             else
-              echo "CHANNEL=edge" >> $GITHUB_ENV
+              echo "CHANNEL=v21" >> $GITHUB_ENV
             fi
 
       - uses: snapcore/action-publish@v1
