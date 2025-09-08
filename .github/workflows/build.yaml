@@ -24,6 +24,7 @@ jobs:
       matrix:
         arch: [arm64, amd64]
     runs-on: self-hosted-linux-${{ matrix.arch }}-noble-large
+    if: ${{ github.ref_name == 'graalvm-jdk-21' }}
     steps:
       - uses: actions/checkout@v5
         id: checkout
@@ -38,13 +39,13 @@ jobs:
         id: upload-artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.ref_name }}-${{ matrix.arch }}
+          name: graalvm-jdk-snap-${{ matrix.arch }}
           path: ${{ steps.build-snap.outputs.snap }}
 
 
   snapcraft-publish:
     runs-on: ubuntu-latest
-    if: ${{ contains(fromJSON('["workflow_dispatch"]'), github.event_name)  }}
+    if: ${{ contains(fromJSON('["push"]'), github.event_name) && github.ref_name == 'graalvm-jdk-21' }}
     needs: snapcraft-build
     strategy:
       matrix:
@@ -71,12 +72,12 @@ jobs:
 
       - name: Set release channel
         run: |
-            if [[ "$GITHUB_REF_NAME" == "development" ]]; then
+            if [[ github.ref_name == 'development' ]]; then
               echo "CHANNEL=edge" >> $GITHUB_ENV
-            elif [[ "$GITHUB_REF_NAME" == "graalvm-jdk-24" ]]; then
-              echo "CHANNEL=stable" >> $GITHUB_ENV
-            else
+            elif [[ github.ref_name == 'graalvm-jdk-21' ]]; then
               echo "CHANNEL=v21" >> $GITHUB_ENV
+            else
+              echo "CHANNEL=stable" >> $GITHUB_ENV
             fi
 
       - uses: snapcore/action-publish@v1
