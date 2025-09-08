@@ -24,6 +24,7 @@ jobs:
       matrix:
         arch: [arm64, amd64]
     runs-on: self-hosted-linux-${{ matrix.arch }}-noble-large
+    if: ${{ "$GITHUB_REF_NAME" == "graalvm-jdk-21" }}
     steps:
       - uses: actions/checkout@v5
         id: checkout
@@ -44,7 +45,7 @@ jobs:
 
   snapcraft-publish:
     runs-on: ubuntu-latest
-    if: ${{ contains(fromJSON('["push"]'), github.event_name)  }} 
+    if: ${{ contains(fromJSON('["push"]'), github.event_name) && "$GITHUB_REF_NAME" == "graalvm-jdk-21" }}
     needs: snapcraft-build
     strategy:
       matrix:
