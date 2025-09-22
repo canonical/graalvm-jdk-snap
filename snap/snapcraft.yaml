@@ -48,6 +48,7 @@ parts:
     source-type: tar
     build-environment:
     - JVMCI_VERSION_CHECK: ignore
+    - LDFLAGS: ''
     build-packages:
     - gcc
     - make
