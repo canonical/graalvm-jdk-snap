@@ -26,7 +26,7 @@ lint:
   ignore:
   - library:
     - graalvm-ce/lib/*.so
-    - usr/lib/x86_64-linux-gnu/*.so*
+    - usr/lib/*-linux-gnu/*.so*
 
 plugs:
   home:
@@ -57,7 +57,7 @@ parts:
     override-build: |
       rm -r $CRAFT_PART_SRC
       cd $CRAFT_PART_BUILD/vm
-      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-25-openjdk-amd64-jvmci --env ce build
+      $CRAFT_STAGE/mx/mx --java-home /usr/lib/jvm/java-25-openjdk-${CRAFT_ARCH_BUILD_FOR}-jvmci --env ce build
       craftctl default
     stage-packages:
     - build-essential
@@ -181,4 +181,3 @@ apps:
 
   rmiregistry:
     command: graalvm-ce/bin/rmiregistry
-
