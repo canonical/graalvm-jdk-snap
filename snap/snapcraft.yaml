@@ -46,6 +46,8 @@ parts:
     plugin: nil
     source: https://github.com/oracle/graal/archive/refs/tags/jdk-25.0.0.tar.gz
     source-type: tar
+    build-environment:
+    - JVMCI_VERSION_CHECK: ignore
     build-packages:
     - gcc
     - make
