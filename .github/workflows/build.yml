@@ -24,7 +24,6 @@ jobs:
       matrix:
         arch: [arm64, amd64]
     runs-on: self-hosted-linux-${{ matrix.arch }}-noble-large
-    if: ${{ github.ref_name == 'graalvm-jdk-21' }}
     steps:
       - uses: actions/checkout@v5
         id: checkout
