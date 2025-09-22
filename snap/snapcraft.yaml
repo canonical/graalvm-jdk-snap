@@ -15,6 +15,7 @@ confinement: strict
 
 platforms:
   amd64:
+  arm64:
 
 package-repositories:
   - type: apt
