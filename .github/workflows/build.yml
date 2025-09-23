@@ -5,12 +5,12 @@ on:
     branches:
       - development
       - graalvm-jdk-21
-      - graalvm-jdk-24
+      - graalvm-jdk-25
   pull_request:
     branches:
       - development
       - graalvm-jdk-21
-      - graalvm-jdk-24
+      - graalvm-jdk-25
   workflow_dispatch:
 
 permissions:
