@@ -44,7 +44,7 @@ parts:
   graalvm:
     after: [mx]
     plugin: nil
-    source: https://github.com/pushkarnk/graal/releases/tag/jdk-25.0.0.1
+    source: https://github.com/pushkarnk/graal/archive/refs/tags/jdk-25.0.0.1.tar.gz
     source-type: tar
     build-environment:
     - LDFLAGS: ''
