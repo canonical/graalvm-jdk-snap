@@ -47,6 +47,7 @@ parts:
     source: https://github.com/pushkarnk/graal/archive/refs/tags/jdk-25.0.1.tar.gz
     source-type: tar
     build-environment:
+    - JVMCI_VERSION_CHECK: ignore
     - LDFLAGS: ''
     build-packages:
     - gcc
