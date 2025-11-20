@@ -19,7 +19,7 @@ platforms:
 
 package-repositories:
   - type: apt
-    ppa: pushkarnk/graalvm-packages
+    ppa: pushkarnk/graalvm-temp
     priority: always
 
 lint:
