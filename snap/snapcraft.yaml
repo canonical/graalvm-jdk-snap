@@ -1,6 +1,6 @@
 name: graalvm-jdk
 base: core24
-version: '25.0.1'
+version: '25.0.2'
 summary: GraalVM for the Java Development Kit v25
 description: |
   GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
@@ -44,7 +44,7 @@ parts:
   graalvm:
     after: [mx]
     plugin: nil
-    source: https://github.com/pushkarnk/graal/archive/refs/tags/jdk-25.0.1.tar.gz
+    source: https://github.com/graalvm/graalvm-community-jdk25u/archive/refs/tags/jdk-25.0.2.tar.gz
     source-type: tar
     build-environment:
     - LDFLAGS: ''
