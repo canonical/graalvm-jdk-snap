@@ -37,6 +37,8 @@ jobs:
       - name: Upload Snap to workflow artifacts
         id: upload-artifact
         uses: actions/upload-artifact@v4
+        env:
+          ACTIONS_ARTIFACT_UPLOAD_TIMEOUT_MS: "600000"
         with:
           name: graalvm-jdk-snap-${{ matrix.arch }}
           path: ${{ steps.build-snap.outputs.snap }}
