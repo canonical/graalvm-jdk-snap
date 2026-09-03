@@ -1,0 +1,12 @@
+#!/bin/bash
+# gcc shim for the graalvm-jdk snap.
+# export PATHs that gcc needs and re-invoke gcc.
+SNAP="$(cd "$(dirname "$0")/.." && pwd)"
+for d in "$SNAP"/usr/lib/*-linux-gnu; do
+    TRIPLET="$(basename "$d")"
+    break
+done
+export LD_LIBRARY_PATH="$SNAP/usr/lib:$SNAP/usr/lib/$TRIPLET${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export C_INCLUDE_PATH="$SNAP/usr/include:$SNAP/usr/include/$TRIPLET"
+export LIBRARY_PATH="$SNAP/usr/lib:$SNAP/usr/lib/$TRIPLET"
+exec "$SNAP/usr/bin/gcc" "$@"
