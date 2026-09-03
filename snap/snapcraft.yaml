@@ -1,6 +1,6 @@
 name: graalvm-jdk
 base: core24
-version: '25.0.3'
+version: '25.0.4'
 summary: GraalVM for the Java Development Kit v25
 description: |
   GraalVM is an advanced JDK with ahead-of-time Native Image compilation.
@@ -35,7 +35,7 @@ parts:
   mx:
     plugin: nil
     source: https://github.com/graalvm/mx
-    source-tag: 7.54.6.1
+    source-tag: 7.54.6.2
     source-type: git
     override-stage: |
       cp -R $CRAFT_PART_BUILD $CRAFT_PART_INSTALL/mx
@@ -44,7 +44,7 @@ parts:
   graalvm:
     after: [mx]
     plugin: nil
-    source: https://github.com/graalvm/graalvm-community-jdk25u/archive/refs/tags/jdk-25.0.3.tar.gz
+    source: https://github.com/graalvm/graalvm-community-jdk25u/archive/refs/tags/jdk-25.0.4.tar.gz
     source-type: tar
     build-environment:
     - LDFLAGS: ''
@@ -76,7 +76,18 @@ parts:
     - libxcb1
     override-stage: |
       mv $CRAFT_PART_BUILD/sdk/latest_graalvm/graalvm-community-openjdk* $CRAFT_PART_INSTALL/graalvm-ce
+      # The staged glibc linker script references libc_nonshared.a by an
+      # absolute path that only exists on deb systems (the core24 base has
+      # no dev files). Reference it by name instead, so the linker resolves
+      # it from the library search path (bin/gcc-shim sets LIBRARY_PATH to
+      # the snap's own lib directory).
+      sed -i 's|/usr/lib/[a-z0-9_-]*-linux-gnu/libc_nonshared\.a|libc_nonshared.a|g' \
+        $CRAFT_PART_INSTALL/usr/lib/*-linux-gnu/libc.so
       craftctl default
+
+  shims:
+    plugin: dump
+    source: snap/local
 
 apps:
   java:
@@ -95,7 +106,7 @@ apps:
     command: graalvm-ce/bin/javac
 
   native-image:
-    command: graalvm-ce/bin/native-image
+    command: bin/native-image
 
   native-image-configure:
     command: graalvm-ce/bin/native-image-configure

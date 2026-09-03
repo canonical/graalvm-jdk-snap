@@ -1,0 +1,4 @@
+#!/bin/bash
+# Wrapper for the snap's native-image launcher, that uses the gcc-shim.
+SNAP="$(cd "$(dirname "$0")/.." && pwd)"
+exec "$SNAP/graalvm-ce/bin/native-image" -H:CCompilerPath="$SNAP/bin/gcc-shim" "$@"
